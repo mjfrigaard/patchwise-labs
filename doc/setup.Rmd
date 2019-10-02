@@ -1,0 +1,348 @@
+---
+title: "Good enough project template (github)"
+author: "Martin Frigaard"
+date: "current version: `r Sys.Date()`"
+output: github_document
+---
+
+Use this tiny `url` to download this file: http://bit.ly/good-enuff-template, or enter this into your R/RStudio console:
+
+```{r , eval=FALSE}
+utils::download.file(url = "http://bit.ly/good-enuff-template", 
+                     destfile = "good-enough-template.Rmd")
+```
+
+
+```{r setup, include=FALSE}
+library(knitr)
+library(rmdformats)
+require(tidyverse)
+library(plotly)
+require(janitor)
+require(skimr)
+library(mosaic)
+library(inspectdf)
+library(visdat)
+library(DT)
+# base options ----
+base::options(
+  tibble.print_max = 25,
+  tibble.width = 78,
+  scipen = 100000000,
+  max.print = 999999
+)
+# knitr chunk options ----
+knitr::opts_chunk$set(
+  echo = TRUE, # show/hide all code
+  # results = "hide", # hide results
+  tidy = FALSE, # cleaner code printing
+  comment = "#> ", # better console printing
+  eval = TRUE, # turn this to FALSE stop code chunks from running
+  message = TRUE, # show messages
+  fig.width = 7, # figure width
+  fig.height = 5, # figure height
+  warning = FALSE, # show warnings
+  size = "small", # size of the text
+  fig.path = "figs/"
+) # location of files
+# knitr knit settings ----
+knitr::opts_knit$set(
+  width = 78
+)
+```
+
+# Motivation
+
+This `.Rmd` file is based on the **excellent** advice in the paper, ["Good Enough Practices for Scientific Computing"](https://swcarpentry.github.io/good-enough-practices-in-scientific-computing/) by Wilson et al. 
+
+## The README, CITATION, requirements.txt, and LICENSE files
+
+- The `CITATION` and `LICENSE` files are created below. `CITATION` should contain information about how to properly cite this project. The `LICENSE` file will have any licensing information (`MIT`, `GNU`, etc.).
+
+- This file is the `README.Rmd`, which will create a `README.md` when it is knitted. 
+
+- This document also creates a  `requirements.txt` file that should list all dependencies for this project. 
+
+```
+|-- CITATION
+|-- README.md
+|-- LICENSE
+|-- requirements.txt
+```
+
+
+```{r CITATION-LICENSE-files}
+# CITATION ------------------------------------------------------
+if (!file.exists("CITATION")) {
+    file.create("CITATION")
+}
+
+# LICENSE ------------------------------------------------------
+if (!file.exists("LICENSE")) {
+    file.create("LICENSE")
+}
+
+# requirements.txt ------------------------------------------------------
+if (!file.exists("requirements.txt")) {
+    file.create("requirements.txt")
+}
+```
+
+## The CHANGELOG 
+
+The code below creates a `CHANGELOG.md` file for documenting "*dated notes about changes to the project in this file in reverse chronological order (i.e., most recent first). This file is the equivalent of a lab notebook, and should contain entries like those shown below.* 
+
+The examples are included in the newly created file. 
+
+```{r CHANGELOG-file}
+# CHANGELOG.md ------------------------------------------------------
+if (!file.exists("CHANGELOG.md")) {
+    file.create("CHANGELOG.md")
+}
+c("## 2016-04-08\n\n * Switched to cubic interpolation as default.\n* Moved question about family's TB history to end of questionnaire.\n \n## 2016-04-06\n* Added option for cubic interpolation.\n
+* Removed question about staph exposure (can be inferred from blood test results).") %>% readr::write_lines( "CHANGELOG.md")
+```
+
+The paper recommends putting `CHANGELOG` in the `docs` folder, but I like to have it more visible so visitors are more likely to review it. This can also be named the `NEWS.md` file. 
+
+## The data, docs, code, and results folders
+
+```
+|-- docs
+|-- data
+|-- results
+|-- code
+```
+
+These are the folders for various files in a typical project workflow. 
+
+## The data folder
+
+This folder will store your data. The data are arguably the most important part to an analysis, so I've included two articles that are absolute necessities to good data management. 
+
+1. [How to Share Data for Collaboration](https://amstat.tandfonline.com/doi/abs/10.1080/00031305.2017.1375987) by Shannon E. Ellis & Jeffrey T. Leek
+
+2. [Data Organization in Spreadsheets](https://www.tandfonline.com/doi/full/10.1080/00031305.2017.1375989) by Karl W. Broman & Kara H. Woo
+
+These two are included in the `README.md` file in the data folder below:
+
+#### Create data folder and README
+
+```{r data}
+# data ------------------------------------------------------------------
+if (!file.exists("data/")) {
+    dir.create("data/")
+}
+# data README ----
+if (!file.exists("data/README.md")) {
+file.create("data/README.md")
+}
+```
+
+#### Add resources to data/README
+
+This will add the resources to the `README.md` document in the `data` folder. 
+
+```{r data_info}
+data_info <- "\n\n\n# For guidance please see:\n\n# Sharing data\nhttp://bit.ly/data-4-sharing\n\n\n# Data in spreadsheets\nhttp://bit.ly/data-in-sheets\n"
+# append to README.md
+if (file.exists("data/README.md")) {
+data_info %>% readr::write_lines("data/README.md", 
+                                     append = TRUE)
+}
+```
+
+
+
+- The data folder might also have `raw` and `processed` sub-folders.
+
+## The code 
+
+This folder is titled `src` in the paper, but I opted for the more descriptive term `code`. 
+
+```{r code}
+# code ------------------------------------------------------------------
+if (!file.exists("code/")) {
+    dir.create("code/")
+}
+```
+
+`code` can mean a lot of different things, so I will reprint the section of the paper here: 
+
+> ***Put project source code in the src directory. (4d)** `src` contains all of the code written for the project. This includes programs written in interpreted languages such as R or Python; those written compiled languages like Fortran, C++, or Java; as well as shell scripts, snippets of SQL used to pull information from databases; and other code needed to regenerate the results.
+
+These are the `import`, `wrangle`, `visualize`, `model`, and `communicate` scripts created below. 
+
+### The Scientific Guts
+
+The code below creates the following scripts based on the `tidyverse` workflow in the `code` folder. 
+
+```
+|-- code
+|   -- 01-import.R
+|   -- 02-tidy.R
+|   -- 03-wrangle.R
+|   -- 04-visualize.R
+|   -- 05-model.R
+|   -- 06-communicate.R
+|   -- runall.R
+```
+
+
+> This directory may contain two conceptually distinct types of files that should be distinguished either by clear file names or by additional sub-directories. The first type are files or groups of files that perform the core analysis of the research, such as data cleaning or statistical analyses. These files can be thought of as the "scientific guts" of the project.
+
+I like to put the "scientific guts" in a `code/core/` folder, but for this template, they are in the `code`.
+
+```{r script-files}
+# tidyverse scripts ----
+if (!file.exists(c("./code/01-import.R", "./code/02-tidy.R", 
+                   "./code/03-wrangle.R", "./code/04-visualize.R",
+                   "./code/05-model.R", "./code/06-communicate.R",
+                   "./code/runall.R"))) {
+    file.create(c("./code/01-import.R", "./code/02-tidy.R", 
+                   "./code/03-wrangle.R", "./code/04-visualize.R",
+                   "./code/05-model.R", "./code/06-communicate.R",
+                  "./code/runall.R"))
+}
+```
+
+#### Script headers
+
+This is an optional code chunk (it is set to `eval = FALSE`, so you'll have to run it manually or change to `eval = TRUE`) that adds the following script header to the `runall.R` file. 
+
+```r
+#=====================================================================#
+# This is code to create:
+# Authored by and feedback to:
+# MIT License
+# Version:
+#=====================================================================#
+```
+
+```{r script_header_content}
+script_headers <- c("#=====================================================================#\n# This is code to create:\n# Authored by and feedback to:\n# MIT License\n# Version:\n#=====================================================================#\n")
+```
+
+
+```{r script-header, eval = TRUE}
+# add to 01-import.R
+script_headers %>% readr::write_lines("./code/01-import.R")
+# add to 02-tidy.R
+script_headers %>% readr::write_lines("./code/02-tidy.R")
+# add to 03-wrangle.R
+script_headers %>% readr::write_lines( "./code/03-wrangle.R")
+# add to 04-visualize.R
+script_headers %>% readr::write_lines( "./code/04-visualize.R")
+# add to 05-model.R
+script_headers %>% readr::write_lines( "./code/05-model.R")
+# add to 06-communicate.R
+script_headers %>% readr::write_lines( "./code/06-communicate.R")
+```
+
+
+> The second type of file in `src` is controller or driver scripts that that contains all the analysis steps for the entire project from start to finish, with particular parameters and data input/output commands. A controller script for a simple project, for example, may read a raw data table, import and apply several cleanup and analysis functions from the other files in this directory, and create and save a numeric result. For a small project with one main output, a single controller script should be placed in the main src directory and distinguished clearly by a name such as "`runall`". The short example in Figure [fig:script] is typical of scripts of this kind; note how it uses one variable, TEMP_DIR, to avoid repeating the name of a particular directory four times.
+
+The controller script is created in the code folder as, `runall.R`.
+
+```{r run-all}
+if (!file.exists("./code/runall.R")) {
+    file.create("./code/runall.R")
+}
+```
+
+Below is a header for the `runall.R` script.
+
+```r
+#=====================================================================#
+
+# The controller script: A controller script for a simple project, for example,
+# may read a raw data table, import and apply several cleanup and analysis
+# functions from the other files in this directory, and create and save a
+# numeric result.
+
+# TEMP_DIR = ./temp_zip_files/
+
+# echo 'Packaging zip files required by analysis tool...'
+# mkdir $(TEMP_DIR)
+# ./src/make-zip-files.py $(TEMP_DIR) *.dat
+
+# echo 'Analyzing...'
+# ./bin/sqr_mean_analyze -i $(TEMP_DIR) -b 'temp'
+
+# echo 'Cleaning up...'
+# rm -rf $(TEMP_DIR)
+
+#=====================================================================#
+```
+
+```{r controller-header}
+c("#=====================================================================#\n\n# The controller script: A controller script for a simple project, for example,\n# may read a raw data table, import and apply several cleanup and analysis\n# functions from the other files in this directory, and create and save a\n# numeric result.\n\n# TEMP_DIR = ./temp_zip_files/\n\n# echo 'Packaging zip files required by analysis tool...'\n# mkdir $(TEMP_DIR)\n# ./src/make-zip-files.py $(TEMP_DIR) *.dat\n\n# echo 'Analyzing...'\n# ./bin/sqr_mean_analyze -i $(TEMP_DIR) -b 'temp'\n\n# echo 'Cleaning up...'\n# rm -rf $(TEMP_DIR)\n\n#=====================================================================#") %>% 
+    readr::write_lines("./code/runall.R")
+```
+
+## The results 
+
+These are visualizations, model outputs, etc. I also create a `results/README.md` file
+
+```{r results}
+# results ------------------------------------------------------------------
+if (!file.exists("results/")) {
+    dir.create("results/")
+}
+# results README
+if (!file.exists("results/README.md")) {
+    file.create("results/README.md")
+}
+```
+
+The `results` folder could be renamed `output` (and could have a `figures` or `images` sub folder).
+
+Below is a header with some information from the paper on what kinds of data go in `results` (vs. `data`).
+
+```mdown
+Results notes:
+===================
+
+> Put raw data and metadata in a `data` directory, and files generated during
+> cleanup and analysis in a `results` directory.
+```
+
+
+```{r results_info}
+results_info <- c("Results notes:\n===================\n\n> Put raw data and metadata in a `data` directory, and files generated during\n> cleanup and analysis in a `results` directory.")
+if (file.exists("results/README.md")) {
+results_info %>% readr::write_lines("results/README.md", 
+                                     append = TRUE)
+}
+```
+
+
+### The `doc` folder
+
+> The `doc` directory contains two text files written in Markdown, one containing a running lab notebook describing various ideas for the project and how these were implemented and the other containing a running draft of a manuscript describing the project findings.
+
+```{r docs}
+# docs ------------------------------------------------------------------
+if (!file.exists("doc/")) {
+    dir.create("doc/")
+}
+# doc files -------
+if (!file.exists(c("./doc/lab-notes.md", "./doc/project-manuscript.md"))) {
+    file.create(c("./doc/lab-notes.md", "./doc/project-manuscript.md"))
+}
+```
+
+Feel free to add more specific sub-folders as needed. 
+
+## Verify the new folder structure
+
+The `fs::dir_tree()` function gives us a nice overview of the accompanying files. 
+
+```{r tree, results='markup', include=TRUE}
+fs::dir_tree(".")
+```
+
+
+
+
+
