@@ -128,6 +128,32 @@ Now we can clean up these imported data.
 Laucntycur14RAW %>% utils::head(10)
 ```
 
+    #>  # A tibble: 10 x 9
+    #>     laus_area_code    state_fips_codes county_fips_codes  area_title  period
+    #>     <chr>             <chr>            <chr>              <chr>       <chr> 
+    #>   1 "  LAUS Area Cod… --------------   "                … "   Period… "    …
+    #>   2 <NA>              " State"         " County"          <NA>        <NA>  
+    #>   3 ----------------… <NA>             <NA>               <NA>        <NA>  
+    #>   4 " CN010010000000… "  01  "         "  001  "          " Autauga … "   J…
+    #>   5 " CN010030000000… "  01  "         "  003  "          " Baldwin … "   J…
+    #>   6 " CN010050000000… "  01  "         "  005  "          " Barbour … "   J…
+    #>   7 " CN010070000000… "  01  "         "  007  "          " Bibb Cou… "   J…
+    #>   8 " CN010090000000… "  01  "         "  009  "          " Blount C… "   J…
+    #>   9 " CN010110000000… "  01  "         "  011  "          " Bullock … "   J…
+    #>  10 " CN010130000000… "  01  "         "  013  "          " Butler C… "   J…
+    #>     civilian_labor_force employed           unemployed_level unemployed_rate
+    #>     <chr>                <chr>              <chr>            <chr>          
+    #>   1 "  Employed  "       -----------------… <NA>             <NA>           
+    #>   2 "    Force   "       <NA>               "   Level  "     "   Rate"      
+    #>   3 <NA>                 <NA>               <NA>             <NA>           
+    #>   4 "     26,310 "       "     25,182 "     "    1,128 "     "     4.3"     
+    #>   5 "     97,478 "       "     93,490 "     "    3,988 "     "     4.1"     
+    #>   6 "      8,533 "       "      8,014 "     "      519 "     "     6.1"     
+    #>   7 "      8,722 "       "      8,321 "     "      401 "     "     4.6"     
+    #>   8 "     25,268 "       "     24,195 "     "    1,073 "     "     4.2"     
+    #>   9 "      4,828 "       "      4,608 "     "      220 "     "     4.6"     
+    #>  10 "      9,048 "       "      8,557 "     "      491 "     "     5.4"
+
 This shows that the first three lines are meta data–we can clean these
 with a little filtering. I am going to limit these data to those with a
 LAUS area code with a `CN` pefix.
@@ -139,6 +165,32 @@ Laucntycur14 <- Laucntycur14RAW %>%
 Laucntycur14 %>% utils::head(10)
 ```
 
+    #>  # A tibble: 10 x 9
+    #>     laus_area_code  state_fips_codes county_fips_codes area_title     period
+    #>     <chr>           <chr>            <chr>             <chr>          <chr> 
+    #>   1 " CN0100100000… "  01  "         "  001  "         " Autauga Cou… "   J…
+    #>   2 " CN0100300000… "  01  "         "  003  "         " Baldwin Cou… "   J…
+    #>   3 " CN0100500000… "  01  "         "  005  "         " Barbour Cou… "   J…
+    #>   4 " CN0100700000… "  01  "         "  007  "         " Bibb County… "   J…
+    #>   5 " CN0100900000… "  01  "         "  009  "         " Blount Coun… "   J…
+    #>   6 " CN0101100000… "  01  "         "  011  "         " Bullock Cou… "   J…
+    #>   7 " CN0101300000… "  01  "         "  013  "         " Butler Coun… "   J…
+    #>   8 " CN0101500000… "  01  "         "  015  "         " Calhoun Cou… "   J…
+    #>   9 " CN0101700000… "  01  "         "  017  "         " Chambers Co… "   J…
+    #>  10 " CN0101900000… "  01  "         "  019  "         " Cherokee Co… "   J…
+    #>     civilian_labor_force employed       unemployed_level unemployed_rate
+    #>     <chr>                <chr>          <chr>            <chr>          
+    #>   1 "     26,310 "       "     25,182 " "    1,128 "     "     4.3"     
+    #>   2 "     97,478 "       "     93,490 " "    3,988 "     "     4.1"     
+    #>   3 "      8,533 "       "      8,014 " "      519 "     "     6.1"     
+    #>   4 "      8,722 "       "      8,321 " "      401 "     "     4.6"     
+    #>   5 "     25,268 "       "     24,195 " "    1,073 "     "     4.2"     
+    #>   6 "      4,828 "       "      4,608 " "      220 "     "     4.6"     
+    #>   7 "      9,048 "       "      8,557 " "      491 "     "     5.4"     
+    #>   8 "     46,571 "       "     43,982 " "    2,589 "     "     5.6"     
+    #>   9 "     15,279 "       "     14,578 " "      701 "     "     4.6"     
+    #>  10 "     11,838 "       "     11,303 " "      535 "     "     4.5"
+
 ### Trim all white space
 
 This is a quick fix with a little iteration from `purrr`.
@@ -147,6 +199,18 @@ This is a quick fix with a little iteration from `purrr`.
 Laucntycur14 <- purrr:::map_df(.x = Laucntycur14, .f = stringr::str_trim)
 Laucntycur14 %>% glimpse(78)
 ```
+
+    #>  Observations: 45,066
+    #>  Variables: 9
+    #>  $ laus_area_code       <chr> "CN0100100000000", "CN0100300000000", "CN01005…
+    #>  $ state_fips_codes     <chr> "01", "01", "01", "01", "01", "01", "01", "01"…
+    #>  $ county_fips_codes    <chr> "001", "003", "005", "007", "009", "011", "013…
+    #>  $ area_title           <chr> "Autauga County, AL", "Baldwin County, AL", "B…
+    #>  $ period               <chr> "Jun-18", "Jun-18", "Jun-18", "Jun-18", "Jun-1…
+    #>  $ civilian_labor_force <chr> "26,310", "97,478", "8,533", "8,722", "25,268"…
+    #>  $ employed             <chr> "25,182", "93,490", "8,014", "8,321", "24,195"…
+    #>  $ unemployed_level     <chr> "1,128", "3,988", "519", "401", "1,073", "220"…
+    #>  $ unemployed_rate      <chr> "4.3", "4.1", "6.1", "4.6", "4.2", "4.6", "5.4…
 
 ## Format variables
 
@@ -176,6 +240,18 @@ Laucntycur14 <- Laucntycur14 %>%
 Laucntycur14 %>% dplyr::glimpse(78)
 ```
 
+    #>  Observations: 45,066
+    #>  Variables: 9
+    #>  $ laus_area_code       <chr> "CN0100100000000", "CN0100300000000", "CN01005…
+    #>  $ state_fips_codes     <chr> "01", "01", "01", "01", "01", "01", "01", "01"…
+    #>  $ county_fips_codes    <chr> "001", "003", "005", "007", "009", "011", "013…
+    #>  $ area_title           <chr> "Autauga County, AL", "Baldwin County, AL", "B…
+    #>  $ period               <chr> "Jun-18", "Jun-18", "Jun-18", "Jun-18", "Jun-1…
+    #>  $ civilian_labor_force <dbl> 26310, 97478, 8533, 8722, 25268, 4828, 9048, 4…
+    #>  $ employed             <dbl> 25182, 93490, 8014, 8321, 24195, 4608, 8557, 4…
+    #>  $ unemployed_level     <dbl> 1128, 3988, 519, 401, 1073, 220, 491, 2589, 70…
+    #>  $ unemployed_rate      <dbl> 4.3, 4.1, 6.1, 4.6, 4.2, 4.6, 5.4, 5.6, 4.6, 4…
+
 We have two variables containing multiple pieces of information below:
 
   - `period` contains `month` and `year`
@@ -204,6 +280,33 @@ Laucntycur14 <- Laucntycur14 %>%
                     remove = FALSE)
 Laucntycur14 %>% utils::head(10)
 ```
+
+    #>  # A tibble: 10 x 13
+    #>     laus_area_code state_fips_codes county_fips_cod… area_title area  state
+    #>     <chr>          <chr>            <chr>            <chr>      <chr> <chr>
+    #>   1 CN01001000000… 01               001              Autauga C… Auta… AL   
+    #>   2 CN01003000000… 01               003              Baldwin C… Bald… AL   
+    #>   3 CN01005000000… 01               005              Barbour C… Barb… AL   
+    #>   4 CN01007000000… 01               007              Bibb Coun… Bibb… AL   
+    #>   5 CN01009000000… 01               009              Blount Co… Blou… AL   
+    #>   6 CN01011000000… 01               011              Bullock C… Bull… AL   
+    #>   7 CN01013000000… 01               013              Butler Co… Butl… AL   
+    #>   8 CN01015000000… 01               015              Calhoun C… Calh… AL   
+    #>   9 CN01017000000… 01               017              Chambers … Cham… AL   
+    #>  10 CN01019000000… 01               019              Cherokee … Cher… AL   
+    #>     period month  year civilian_labor_… employed unemployed_level
+    #>     <chr>  <ord> <dbl>            <dbl>    <dbl>            <dbl>
+    #>   1 Jun-18 Jun    2018            26310    25182             1128
+    #>   2 Jun-18 Jun    2018            97478    93490             3988
+    #>   3 Jun-18 Jun    2018             8533     8014              519
+    #>   4 Jun-18 Jun    2018             8722     8321              401
+    #>   5 Jun-18 Jun    2018            25268    24195             1073
+    #>   6 Jun-18 Jun    2018             4828     4608              220
+    #>   7 Jun-18 Jun    2018             9048     8557              491
+    #>   8 Jun-18 Jun    2018            46571    43982             2589
+    #>   9 Jun-18 Jun    2018            15279    14578              701
+    #>  10 Jun-18 Jun    2018            11838    11303              535
+    #>  # … with 1 more variable: unemployed_rate <dbl>
 
 ## Quick visualization
 

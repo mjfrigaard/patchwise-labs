@@ -17,7 +17,7 @@ if (!file.exists("figs")) {
 # chunk options
 knitr::opts_chunk$set(
   echo = TRUE, # show/hide all code
-  results = "hide", # hide results
+  # results = "hide", # hide results
   tidy = FALSE, # cleaner code printing
   comment = "#> ", # better console printing
   eval = TRUE, # turn this to FALSE stop code chunks from running
